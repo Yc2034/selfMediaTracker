@@ -62,7 +62,6 @@ const Ecommerce = () => {
         <div>
           <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-b-2xl md:w-400 p-4 m-6 flex items-center gap-10">
             <div>
-              <p className="text-2xl font-semibold ">粉丝年龄</p>
               <p className="text-gray-400">小红书</p>
             </div>
 

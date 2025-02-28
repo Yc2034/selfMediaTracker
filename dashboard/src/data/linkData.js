@@ -50,6 +50,10 @@ export const links = [
           icon: <FiPieChart />,
         },
         {
+          name: 'piev2',
+          icon: <FiPieChart />,
+        },
+        {
           name: 'weather',
           icon: <BsBarChart />,
         },

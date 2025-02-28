@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   PieChart, 
   Pie as RechartsPie, 
@@ -8,8 +8,8 @@ import {
   Legend,
   Sector
 } from 'recharts';
-import { pieChartData, pieChartData2 } from '../../data/charts/pieChartData';
 import { ChartsHeader } from '../../components';
+import { fetchAllChartData } from '../../services/chartService';
 
 // Modern vibrant color scheme
 const COLORS = ['#6366F1', '#EC4899', '#F59E0B', '#10B981'];
@@ -80,27 +80,69 @@ const CustomTooltip = ({ active, payload }) => {
 
 const Pie = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [chartData, setChartData] = useState(pieChartData);
+  const [chartData, setChartData] = useState([]);
+  const [ageData, setAgeData] = useState([]);
+  const [regionData, setRegionData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Fetch data from backend on component mount
+  useEffect(() => {
+    const getChartData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchAllChartData();
+        
+        setAgeData(data.pieChartData);
+        setRegionData(data.pieChartData2);
+        setChartData(data.pieChartData); // Set default to age data
+        
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load chart data');
+        setLoading(false);
+        console.error('Error loading chart data:', err);
+      }
+    };
+    
+    getChartData();
+  }, []);
   
   const onPieEnter = (_, index) => {
     setActiveIndex(index);
   };
   
   const switchDataset = () => {
-    setChartData(chartData === pieChartData ? pieChartData2 : pieChartData);
+    setChartData(chartData === ageData ? regionData : ageData);
     setActiveIndex(0);
   };
 
+  if (loading) return (
+    <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
+      <div className="flex justify-center items-center h-96">
+        <p className="text-lg">加载中...</p>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
+      <div className="flex justify-center items-center h-96">
+        <p className="text-lg text-red-500">{error}</p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300">
-      <ChartsHeader category="Pie" title={chartData === pieChartData ? "粉丝年龄分布" : "粉丝地域分布"} />
+      <ChartsHeader category="Pie" title={chartData === ageData ? "粉丝年龄分布" : "粉丝地域分布"} />
       
       <div className="flex justify-end mb-4">
         <button 
           onClick={switchDataset}
           className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
         >
-          {chartData === pieChartData ? "查看地域分布" : "查看年龄分布"}
+          {chartData === ageData ? "查看地域分布" : "查看年龄分布"}
         </button>
       </div>
       

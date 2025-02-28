@@ -1,7 +1,10 @@
-Go to dashboard folder
-
+For frontend Go to dashboard folder
 
 npm start
+
+for backend go to chart-backend folder
+
+npm run dev
 
 
 
