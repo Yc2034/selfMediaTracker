@@ -46,11 +46,7 @@ export const links = [
         },
   
         {
-          name: 'pieAge',
-          icon: <FiPieChart />,
-        },
-        {
-          name: 'pieCity',
+          name: 'pieAgeAndCity',
           icon: <FiPieChart />,
         },
         {

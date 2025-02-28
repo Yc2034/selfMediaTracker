@@ -6,7 +6,7 @@ export { default as Kanban } from './Kanban';
 export { default as ColorMapping } from './Charts/ColorMapping';
 export { default as Line } from './Charts/Line';
 export { default as Pie } from './Charts/Pie';
-export { default as Pie2 } from './Charts/Pie2';
+export { default as EnhancedPieChart} from './Charts/EnhancedPieChart'
 export { default as Pyramid } from './Charts/Pyramid';
 
 

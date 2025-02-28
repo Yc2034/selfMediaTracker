@@ -1,18 +1,42 @@
 import React, { useState } from 'react';
 import { 
   PieChart, 
-  Pie as RechartsPie, 
+  Pie, 
   Cell, 
   ResponsiveContainer, 
   Tooltip, 
   Legend,
-  Sector
+  Sector,
+  AnimatedAxis
 } from 'recharts';
-import { pieChartData, pieChartData2 } from '../../data/charts/pieChartData';
-import { ChartsHeader } from '../../components';
+
+// Demo data (same as your provided data)
+const pieChartData = [
+  { x: '小于18', y: 40, text: '40%' },
+  { x: '19到24', y: 29, text: '29%' },
+  { x: '25到30', y: 16, text: '16%' },
+  { x: '30以上', y: 15, text: '15%' },
+];
+
+const pieChartData2 = [
+  { x: '一线', y: 33, text: '33%' },
+  { x: '二三线', y: 38, text: '38%' },
+  { x: '四五线', y: 25, text: '25%' },
+  { x: '海外', y: 4, text: '4%' },
+];
 
 // Modern vibrant color scheme
 const COLORS = ['#6366F1', '#EC4899', '#F59E0B', '#10B981'];
+
+// Header component with better styling
+const ChartsHeader = ({ category, title }) => (
+  <div className="mb-10">
+    <div>
+      <p className="text-lg text-gray-400">{category}</p>
+      <p className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-gray-200">{title}</p>
+    </div>
+  </div>
+);
 
 // Custom active shape for hover animation
 const renderActiveShape = (props) => {
@@ -78,9 +102,10 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-const Pie = () => {
+// Enhanced Pie Chart component
+const EnhancedPieChart = ({ data = pieChartData, title = "粉丝年龄", category = "Pie" }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [chartData, setChartData] = useState(pieChartData);
+  const [chartData, setChartData] = useState(data);
   
   const onPieEnter = (_, index) => {
     setActiveIndex(index);
@@ -92,8 +117,8 @@ const Pie = () => {
   };
 
   return (
-    <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300">
-      <ChartsHeader category="Pie" title={chartData === pieChartData ? "粉丝年龄分布" : "粉丝地域分布"} />
+    <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300">
+      <ChartsHeader category={category} title={chartData === pieChartData ? "粉丝年龄分布" : "粉丝地域分布"} />
       
       <div className="flex justify-end mb-4">
         <button 
@@ -107,7 +132,7 @@ const Pie = () => {
       <div className="w-full h-96">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <RechartsPie
+            <Pie
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
               data={chartData}
@@ -127,14 +152,14 @@ const Pie = () => {
                   strokeWidth={2}
                 />
               ))}
-            </RechartsPie>
+            </Pie>
             <Tooltip content={<CustomTooltip />} />
             <Legend 
               layout="horizontal" 
               verticalAlign="bottom" 
               align="center"
               formatter={(value, entry, index) => (
-                <span className="text-gray-700 dark:text-gray-300 font-medium">{value} ({chartData[index].text})</span>
+                <span className="text-gray-700 font-medium">{value} ({chartData[index].text})</span>
               )}
             />
           </PieChart>
@@ -149,7 +174,7 @@ const Pie = () => {
             style={{ backgroundColor: `${COLORS[index]}15`, borderLeft: `4px solid ${COLORS[index]}` }}
             onMouseEnter={() => setActiveIndex(index)}
           >
-            <p className="text-gray-600 dark:text-gray-400 text-sm">{item.x}</p>
+            <p className="text-gray-600 text-sm">{item.x}</p>
             <p className="text-2xl font-bold" style={{ color: COLORS[index] }}>{item.text}</p>
           </div>
         ))}
@@ -158,4 +183,4 @@ const Pie = () => {
   );
 };
 
-export default Pie;
+export default EnhancedPieChart;
