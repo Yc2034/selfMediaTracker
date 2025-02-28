@@ -9,10 +9,25 @@ import {
   Sector
 } from 'recharts';
 import { ChartsHeader } from '../../components';
-import { fetchAllChartData } from '../../services/chartService';
+import { getChartData } from '../../services/chartService';
 
 // Modern vibrant color scheme
 const COLORS = ['#6366F1', '#EC4899', '#F59E0B', '#10B981'];
+
+// Fallback data in case API fails
+const fallbackAgeData = [
+  { x: '小于18', y: 40, text: '40%' },
+  { x: '19到24', y: 29, text: '29%' },
+  { x: '25到30', y: 16, text: '16%' },
+  { x: '30以上', y: 15, text: '15%' },
+];
+
+const fallbackRegionData = [
+  { x: '一线', y: 33, text: '33%' },
+  { x: '二三线', y: 38, text: '38%' },
+  { x: '四五线', y: 25, text: '25%' },
+  { x: '海外', y: 4, text: '4%' },
+];
 
 // Custom active shape for hover animation
 const renderActiveShape = (props) => {
@@ -81,31 +96,44 @@ const CustomTooltip = ({ active, payload }) => {
 const Pie = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [chartData, setChartData] = useState([]);
-  const [ageData, setAgeData] = useState([]);
-  const [regionData, setRegionData] = useState([]);
+  const [ageData, setAgeData] = useState(fallbackAgeData);
+  const [regionData, setRegionData] = useState(fallbackRegionData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   // Fetch data from backend on component mount
   useEffect(() => {
-    const getChartData = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await fetchAllChartData();
+        // Get pie chart data from API
+        const data = await getChartData('pie');
         
-        setAgeData(data.pieChartData);
-        setRegionData(data.pieChartData2);
-        setChartData(data.pieChartData); // Set default to age data
+        console.log('Received data from API:', data);
+        
+        // Check if the data has the expected structure
+        if (data && data.pieChartData && data.pieChartData2) {
+          setAgeData(data.pieChartData);
+          setRegionData(data.pieChartData2);
+          setChartData(data.pieChartData); // Set default to age data
+        } else {
+          console.warn('API returned unexpected data structure, using fallback data');
+          setChartData(fallbackAgeData);
+        }
         
         setLoading(false);
       } catch (err) {
-        setError('Failed to load chart data');
-        setLoading(false);
         console.error('Error loading chart data:', err);
+        // Use fallback data on error
+        setAgeData(fallbackAgeData);
+        setRegionData(fallbackRegionData);
+        setChartData(fallbackAgeData);
+        setError('Could not load data from server. Using local data.');
+        setLoading(false);
       }
     };
     
-    getChartData();
+    fetchData();
   }, []);
   
   const onPieEnter = (_, index) => {
@@ -125,16 +153,14 @@ const Pie = () => {
     </div>
   );
 
-  if (error) return (
-    <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
-      <div className="flex justify-center items-center h-96">
-        <p className="text-lg text-red-500">{error}</p>
-      </div>
-    </div>
-  );
-
   return (
     <div className="m-4 md:m-10 mt-24 p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300">
+      {error && (
+        <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
+          <p>{error}</p>
+        </div>
+      )}
+      
       <ChartsHeader category="Pie" title={chartData === ageData ? "粉丝年龄分布" : "粉丝地域分布"} />
       
       <div className="flex justify-end mb-4">
@@ -176,7 +202,9 @@ const Pie = () => {
               verticalAlign="bottom" 
               align="center"
               formatter={(value, entry, index) => (
-                <span className="text-gray-700 dark:text-gray-300 font-medium">{value} ({chartData[index].text})</span>
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
+                  {chartData[index]?.x} ({chartData[index]?.text})
+                </span>
               )}
             />
           </PieChart>

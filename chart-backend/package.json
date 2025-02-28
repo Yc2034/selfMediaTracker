@@ -1,11 +1,12 @@
 {
     "name": "chart-data-backend",
     "version": "1.0.0",
-    "description": "Backend for chart data",
+    "description": "Scalable backend for chart data",
     "main": "server.js",
     "scripts": {
       "start": "node server.js",
-      "dev": "nodemon server.js"
+      "dev": "nodemon server.js",
+      "init-db": "node db/initialization.js"
     },
     "dependencies": {
       "cors": "^2.8.5",
