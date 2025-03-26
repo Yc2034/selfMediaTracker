@@ -20,5 +20,13 @@ redbubble做贴纸
 youtube
 tiktok
 
-去了义乌，有可能电商卖货
-或者做供货商
+
+
+副业 1. merch by amazon
+
+
+2. red bubble
+
+
+3. Tech ToDO list
+Create a Airflow DAG workflow
