@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ChartConfig, BaselineType, IntervalType } from '../types/stock';
-import { Plus, X, Calendar, TrendingUp } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 
 interface StockFormProps {
   onSubmit: (config: ChartConfig) => void;
@@ -58,34 +58,29 @@ export function StockForm({ onSubmit, loading }: StockFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl shadow-purple-500/20 mb-6">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl">
-          <TrendingUp className="w-6 h-6 text-white" />
-        </div>
-        <h2 className="text-2xl font-bold text-white">Configure Analysis</h2>
-      </div>
+    <form onSubmit={handleSubmit} className="bg-[#1C1C1E] rounded-lg p-6 mb-6 border border-gray-800">
+      <h2 className="text-xl font-semibold text-white mb-6">Analysis Parameters</h2>
 
       {/* Ticker Input */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-300 mb-3">
-          Stock Tickers
+      <div className="mb-5">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
+          Stocks
         </label>
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-3">
           <input
             type="text"
             value={newTicker}
             onChange={(e) => setNewTicker(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Enter ticker (e.g., NVDA)"
-            className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            placeholder="Add ticker"
+            className="flex-1 px-3 py-2.5 bg-[#2C2C2E] border-0 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600"
           />
           <button
             type="button"
             onClick={handleAddTicker}
-            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl transition-all duration-300 flex items-center gap-2 shadow-lg shadow-purple-500/50 hover:scale-105"
+            className="px-5 py-2.5 bg-[#00C805] hover:bg-[#00B004] text-white font-medium rounded-lg transition-colors flex items-center gap-2"
           >
-            <Plus size={20} />
+            <Plus size={18} />
             Add
           </button>
         </div>
@@ -93,15 +88,15 @@ export function StockForm({ onSubmit, loading }: StockFormProps) {
           {tickers.map(ticker => (
             <span
               key={ticker}
-              className="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-200 rounded-xl text-sm font-semibold backdrop-blur-sm hover:from-purple-500/30 hover:to-pink-500/30 transition-all"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2C2C2E] text-white rounded-md text-sm font-medium"
             >
               {ticker}
               <button
                 type="button"
                 onClick={() => handleRemoveTicker(ticker)}
-                className="hover:text-pink-400 transition-colors"
+                className="hover:text-gray-400 transition-colors"
               >
-                <X size={16} />
+                <X size={14} />
               </button>
             </span>
           ))}
@@ -109,75 +104,73 @@ export function StockForm({ onSubmit, loading }: StockFormProps) {
       </div>
 
       {/* Date Range */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
         <div>
-          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-3">
-            <Calendar size={16} className="text-purple-400" />
+          <label className="block text-sm font-medium text-gray-400 mb-2">
             Start Date
           </label>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            className="w-full px-3 py-2.5 bg-[#2C2C2E] border-0 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-gray-600"
           />
         </div>
         <div>
-          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-3">
-            <Calendar size={16} className="text-purple-400" />
+          <label className="block text-sm font-medium text-gray-400 mb-2">
             End Date
           </label>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            className="w-full px-3 py-2.5 bg-[#2C2C2E] border-0 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-gray-600"
           />
         </div>
       </div>
 
       {/* Interval and Baseline */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-400 mb-2">
             Interval
           </label>
           <select
             value={interval}
             onChange={(e) => setInterval(e.target.value as IntervalType)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+            className="w-full px-3 py-2.5 bg-[#2C2C2E] border-0 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-gray-600 appearance-none cursor-pointer"
           >
-            <option value="1d" className="bg-slate-800">Daily (1d)</option>
-            <option value="1wk" className="bg-slate-800">Weekly (1wk)</option>
-            <option value="1mo" className="bg-slate-800">Monthly (1mo)</option>
+            <option value="1d" className="bg-[#2C2C2E]">Daily</option>
+            <option value="1wk" className="bg-[#2C2C2E]">Weekly</option>
+            <option value="1mo" className="bg-[#2C2C2E]">Monthly</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-3">
-            Baseline Type
+          <label className="block text-sm font-medium text-gray-400 mb-2">
+            Baseline
           </label>
           <select
             value={baseline}
             onChange={(e) => setBaseline(e.target.value as BaselineType)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+            className="w-full px-3 py-2.5 bg-[#2C2C2E] border-0 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-gray-600 appearance-none cursor-pointer"
           >
-            <option value="first" className="bg-slate-800">Growth vs. Baseline (x)</option>
-            <option value="percentage" className="bg-slate-800">Cumulative Return (%)</option>
+            <option value="first" className="bg-[#2C2C2E]">Growth (x)</option>
+            <option value="percentage" className="bg-[#2C2C2E]">Return (%)</option>
           </select>
         </div>
       </div>
 
       {/* Title */}
-      <div className="mb-8">
-        <label className="block text-sm font-medium text-gray-300 mb-3">
-          Chart Title (Optional)
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
+          Chart Title <span className="text-gray-600">(Optional)</span>
         </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Leave empty for auto-generated title"
-          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+          placeholder="Auto-generated if empty"
+          className="w-full px-3 py-2.5 bg-[#2C2C2E] border-0 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600"
         />
       </div>
 
@@ -185,15 +178,15 @@ export function StockForm({ onSubmit, loading }: StockFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 hover:from-purple-600 hover:via-pink-600 hover:to-purple-700 text-white font-bold text-lg rounded-xl shadow-2xl shadow-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
+        className="w-full px-6 py-3.5 bg-[#00C805] hover:bg-[#00B004] text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? (
-          <span className="flex items-center justify-center gap-3">
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            Loading Data...
+          <span className="flex items-center justify-center gap-2">
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            Loading...
           </span>
         ) : (
-          'Analyze Performance'
+          'Analyze'
         )}
       </button>
     </form>

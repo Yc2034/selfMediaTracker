@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StockForm } from './components/StockForm';
 import { StockChart } from './components/StockChart';
 import { MetricsTable } from './components/MetricsTable';
-import type { ChartConfig, NormalizedData, PerformanceMetrics } from './types/stock';
+import type { ChartConfig, NormalizedData, PerformanceMetrics, StockData } from './types/stock';
 import { fetchMultipleStocks } from './services/stockService';
 import { normalizePrices, calculateMetrics } from './utils/dataProcessing';
 import { Download, AlertCircle, TrendingUp, BarChart3 } from 'lucide-react';
@@ -11,6 +11,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<ChartConfig | null>(null);
+  const [stockData, setStockData] = useState<StockData[]>([]);
   const [normalizedData, setNormalizedData] = useState<NormalizedData[]>([]);
   const [metrics, setMetrics] = useState<PerformanceMetrics[]>([]);
 
@@ -33,6 +34,7 @@ function App() {
       const normalized = normalizePrices(data, chartConfig.baseline);
       const performanceMetrics = calculateMetrics(data, normalized, chartConfig.baseline);
 
+      setStockData(data);
       setNormalizedData(normalized);
       setMetrics(performanceMetrics);
     } catch (err) {
@@ -142,6 +144,7 @@ function App() {
 
                 <StockChart
                   data={normalizedData}
+                  stockData={stockData}
                   tickers={config.tickers}
                   baseline={config.baseline}
                   title={config.title}

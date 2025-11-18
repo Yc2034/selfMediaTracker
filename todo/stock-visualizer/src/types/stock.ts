@@ -1,6 +1,7 @@
 export interface StockPrice {
   date: Date;
   close: number;
+  volume: number;
 }
 
 export interface StockData {
@@ -11,6 +12,11 @@ export interface StockData {
 export interface NormalizedData {
   date: Date;
   [ticker: string]: number | Date;
+}
+
+export interface VolumeData {
+  date: Date;
+  [key: string]: number | Date; // ticker_volume: volume value
 }
 
 export interface PerformanceMetrics {
