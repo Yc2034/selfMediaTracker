@@ -34,10 +34,12 @@ export async function fetchStockData(
     const timestamps = result.timestamp;
     const quotes = result.indicators.quote[0];
     const closes = quotes.close;
+    const volumes = quotes.volume || [];
 
     const prices = timestamps.map((ts: number, index: number) => ({
       date: new Date(ts * 1000),
       close: closes[index],
+      volume: volumes[index] || 0,
     })).filter((price: any) => price.close !== null);
 
     return {
@@ -91,10 +93,12 @@ export async function fetchMultipleStocks(
       const timestamps = chartResult.timestamp;
       const quotes = chartResult.indicators.quote[0];
       const closes = quotes.close;
+      const volumes = quotes.volume || [];
 
       const prices = timestamps.map((ts: number, index: number) => ({
         date: new Date(ts * 1000),
         close: closes[index],
+        volume: volumes[index] || 0,
       })).filter((price: any) => price.close !== null);
 
       return {
@@ -137,7 +141,10 @@ export function generateSampleData(ticker: string, days: number = 365): StockDat
     const change = (Math.random() - 0.5) * 5;
     price = Math.max(10, price + change);
 
-    prices.push({ date, close: price });
+    // Generate random volume
+    const volume = Math.floor(Math.random() * 100000000) + 10000000;
+
+    prices.push({ date, close: price, volume });
   }
 
   return { ticker, prices };
