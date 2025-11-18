@@ -38,5 +38,4 @@ export interface ChartConfig {
   interval: IntervalType;
   baseline: BaselineType;
   title?: string;
-  useSampleData?: boolean;
 }

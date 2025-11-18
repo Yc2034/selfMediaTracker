@@ -21,7 +21,6 @@ export function StockForm({ onSubmit, loading }: StockFormProps) {
   const [interval, setInterval] = useState<IntervalType>('1d');
   const [baseline, setBaseline] = useState<BaselineType>('first');
   const [title, setTitle] = useState('');
-  const [useSampleData, setUseSampleData] = useState(false);
 
   const handleAddTicker = () => {
     const trimmed = newTicker.trim().toUpperCase();
@@ -48,7 +47,6 @@ export function StockForm({ onSubmit, loading }: StockFormProps) {
       interval,
       baseline,
       title: title || undefined,
-      useSampleData,
     });
   };
 
